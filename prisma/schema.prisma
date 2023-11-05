@@ -11,20 +11,36 @@ datasource db {
 }
 
 model Vote {
-  id        String   @id
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  content   String?
-  published Boolean  @default(false)
-  user_id   String
-  participant_id   String
-  User      User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Participant      Participant     @relation(fields: [participant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id              String   @id
+  user_id         String
+  participant_id  String
+  wall_id         String
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+  Wall            Wall     @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User            User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Participant     Participant     @relation(fields: [participant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Wall {
+  id          String @id
+  starts_at   DateTime @default(now()) @db.Timestamp(6)
+  ends_at     DateTime @default(now()) @db.Timestamp(6)
+  open        Boolean @default(false)
+  Vote        Vote[]
+  Result      Result[]
+}
+
+model Result {
+  id              String @id
+  wall_id         String
+  participant_id  String
+  score           Int @default(0)
+  Wall            Wall     @relation(fields: [wall_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Participant     Participant     @relation(fields: [participant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model User {
   id      String   @id
-  name    String   @db.VarChar(255)
   Vote    Vote[]
 }
 
@@ -32,4 +48,5 @@ model Participant {
   id      String   @id
   name    String   @db.VarChar(255)
   Vote    Vote[]
+  Result  Result[]
 }
