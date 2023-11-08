@@ -20,7 +20,7 @@ const store = async (req, res) => {
                 id: v4()
             },
         })
-        res.json({
+        res.status(201).json({
             user,
             message: 'User created successfully'
         })
@@ -29,4 +29,22 @@ const store = async (req, res) => {
     }
 }
 
-module.exports = { index, store }
+const destroy = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        await prisma.user.delete({
+            where: {
+                id
+            }
+        })
+
+        return res.json({
+            message: 'user deleted successfully'
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+module.exports = { index, store, destroy}
