@@ -14,6 +14,22 @@ const index = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const wall = await prisma.wall.findUnique({
+            where: {
+                id
+            }
+        })
+
+        return res.json(wall)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 const store = async (req, res) => {
     const {  
         starts_at, 
@@ -40,4 +56,48 @@ const store = async (req, res) => {
     }
 }
 
-module.exports = { store, index }
+const update = async (req, res) => {
+    const { id } = req.params
+    const {
+        starts_at, 
+        ends_at,   
+        open
+    } = req.body
+
+    try {
+        await prisma.wall.update({
+            data: {
+                starts_at, 
+                ends_at,   
+                open
+            },
+            where: {
+                id
+            }
+        })
+
+        return res.json({
+            message: 'Wall updated successfully'
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+const destroy = async (req, res) => {
+    const { id } = req.params
+    
+    try {
+        await prisma.wall.delete({
+            where: {
+                id
+            }
+        })
+
+        return res.json({ message: 'Wall deleted successfully' })
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+module.exports = { index, show, store, update, destroy }

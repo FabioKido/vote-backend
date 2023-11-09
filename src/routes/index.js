@@ -15,7 +15,10 @@ router.post('/participant', ParticipantController.store)
 router.put('/participant/:id', ParticipantController.update)
 router.delete('/participant/:id', ParticipantController.destroy)
 
-router.post('/wall', WallController.store)
 router.get('/walls', WallController.index)
+router.get('/wall/:id', WallController.show)
+router.post('/wall', WallController.store)
+router.put('/wall/:id', WallController.update)
+router.delete('/wall/:id', WallController.destroy)
 
 module.exports = router
